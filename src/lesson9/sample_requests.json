@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Strong tariff threat",
+    "request": {
+      "statement": "Trump threatens to impose 25% tariffs on imported goods next week."
+    }
+  },
+  {
+    "name": "Softening negotiation",
+    "request": {
+      "statement": "Trump says he may delay the tariff plan and continue negotiations."
+    }
+  },
+  {
+    "name": "Ambiguous statement",
+    "request": {
+      "statement": "We might do something big next week."
+    }
+  }
+]

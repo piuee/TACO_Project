@@ -1,0 +1,55 @@
+Test 1
+Statement: Trump will impose a 25% tariff on Chinese goods next week.
+Expected hardness: 8
+Expected domain: tariff
+Note: 具体关税比例和执行时间，强硬度较高。
+---------------------------------------------------------------
+
+Test 2
+Statement: We are looking at all options and may consider tariffs later.
+Expected hardness: 2
+Expected domain: tariff
+Note: 只是可能考虑，没有明确威胁。
+---------------------------------------------------------------
+
+Test 3
+Statement: The administration may restrict technology exports to foreign companies.
+Expected hardness: 6
+Expected domain: tech
+Note: 涉及技术出口限制，但仍是可能性表态。
+---------------------------------------------------------------
+
+Test 4
+Statement: We will ban the company from using American chips immediately.
+Expected hardness: 9
+Expected domain: tech
+Note: 立即禁令，科技限制非常明确。
+---------------------------------------------------------------
+
+Test 5
+Statement: Oil producers should lower prices or face new energy restrictions.
+Expected hardness: 7
+Expected domain: energy
+Note: 针对能源领域提出限制威胁。
+---------------------------------------------------------------
+
+Test 6
+Statement: The dollar is too strong and the Fed should cut rates.
+Expected hardness: 4
+Expected domain: fx
+Note: 涉及美元和利率，但不是直接制裁或禁令。
+---------------------------------------------------------------
+
+Test 7
+Statement: Trade talks are making progress and policy adjustments are possible.
+Expected hardness: 2
+Expected domain: tariff
+Note: 谈判进展和政策调整，偏软化。
+---------------------------------------------------------------
+
+Test 8
+Statement: Future policy will depend on market conditions.
+Expected hardness: 2
+Expected domain: other
+Note: 表态模糊，没有明确政策威胁。
+---------------------------------------------------------------

@@ -1,0 +1,33 @@
+# TACO 第12课：Common App 活动描述
+
+## 推荐版本
+
+Built AI system tracking Trump statements; RAG pipeline, 20 cases, 3 Dify workflows; live on Streamlit Cloud.
+
+## 备选版本 A：技术型
+
+Built TACO Radar: RAG + LLM system analyzing Trump statements; 20 cases, 3 Dify workflows, Streamlit Cloud demo.
+
+## 备选版本 B：产品型
+
+Developed AI web app predicting TACO probability from Trump statements using RAG, Dify workflows, and market data.
+
+## 备选版本 C：部署型
+
+Deployed TACO Radar, an AI web app analyzing Trump rhetoric with RAG, 3 Dify workflows, and market impact forecasts.
+
+## 写作原则
+
+1. 用强动词开头：Built / Developed / Designed / Deployed
+2. 加具体技术名词：RAG / LLM / Dify workflows / FastAPI / Streamlit
+3. 加数字：20 cases / 3 workflows / 12-week project
+4. 加可验证成果：live on Streamlit Cloud / public demo URL / GitHub repository
+5. 不要写成投资建议或炒股项目
+
+## 200 字补充说明草稿
+
+The hardest part of this project was turning unpredictable AI outputs into a stable product. Early versions of my workflows often returned inconsistent formats, which made the later steps fail. To solve this, I added validation code after each LLM node, forcing outputs into structured JSON and checking fields such as hardness, domain, probability, confidence, and market direction. This taught me that building with AI is not just about asking a model questions; it is about designing reliable systems around the model.
+
+## 免责声明
+
+本项目仅用于事件影响方向性分析，不构成投资建议。

@@ -1,0 +1,26 @@
+用途：保存第10课前端测试用语，方便学生复制到网页输入框。
+
+Test 1 - Strong Tariff Threat
+Trump threatens to impose 25% tariffs on imported goods next week.
+
+---
+
+Test 2 - Softening Negotiation
+Trump says he may delay the tariff plan and continue negotiations.
+
+---
+
+Test 3 - Ambiguous Statement
+We might do something big next week.
+
+---
+
+Test 4 - Technology Restriction
+The administration may restrict technology exports to foreign chip companies.
+
+---
+
+Test 5 - Energy Ban
+Trump orders an immediate ban on energy imports.
+
+---

@@ -1,0 +1,24 @@
+Test 1
+Type: 强硬
+Query: Trump threatens to impose new tariffs on imported goods.
+---------------------------------------------------------------
+
+Test 2
+Type: 强硬
+Query: The administration may restrict technology exports to foreign companies.
+---------------------------------------------------------------
+
+Test 3
+Type: 软化
+Query: Trump says he may delay the tariff plan and continue negotiations.
+---------------------------------------------------------------
+
+Test 4
+Type: 软化
+Query: Trade talks are making progress and policy adjustments are possible.
+---------------------------------------------------------------
+
+Test 5
+Type: 模糊
+Query: Future trade policy will depend on market conditions and negotiations.
+---------------------------------------------------------------

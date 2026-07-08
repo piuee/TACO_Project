@@ -1,0 +1,52 @@
+# 用途：保存第7课 A / B / C 三组课堂测试输入，方便复制到 Dify Start 节点。
+
+Test A - Strong Tariff
+
+hardness:
+9
+
+domain:
+tariff
+
+reasoning:
+We will impose 100% tariffs on China. Final answer.
+
+Expected:
+TACO probability may be medium to high if similar historical tariff threats often became TACO.
+Confidence depends on retrieved cases.
+
+---
+
+Test B - Softening Negotiation
+
+hardness:
+3
+
+domain:
+tariff
+
+reasoning:
+We are considering adjustments and remain open to dialogue.
+
+Expected:
+TACO probability may be high because the statement already sounds like softening or delay.
+Confidence depends on retrieved cases.
+
+---
+
+Test C - Ambiguous Statement
+
+hardness:
+5
+
+domain:
+other
+
+reasoning:
+We might do something big next week.
+
+Expected:
+TACO probability should be around 50 if the retrieval is weak.
+Confidence should likely be low.
+
+---

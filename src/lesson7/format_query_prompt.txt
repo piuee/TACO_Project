@@ -1,0 +1,44 @@
+# 用途：第7课 Dify 工作流中 LLM① 节点使用的 Prompt。
+# 作用：把第6课输出的 hardness / domain / reasoning 转换成适合知识库检索的自然语言查询。
+
+# Task
+
+You are converting a Trump statement analysis into a search query.
+
+# Input from Workflow 1
+
+* hardness: {{hardness}}
+* domain: {{domain}}
+* reasoning: {{reasoning}}
+
+# Goal
+
+Create ONE search query that can be used to find similar historical TACO cases.
+
+# Requirements
+
+The query should describe:
+
+1. the policy domain,
+2. the intensity or hardness level,
+3. whether the statement sounds threatening, softening, ambiguous, or delaying,
+4. the key characteristics that would help retrieve similar cases.
+
+# Output
+
+Output ONE search query only.
+Use 1-2 sentences.
+Do not output JSON.
+Do not explain your process.
+
+# Example
+
+Input:
+hardness = 8
+domain = tariff
+reasoning = Strong unilateral tariff threat with clear deadline.
+
+Output:
+High-intensity tariff threat with clear deadline and no obvious softening signal. Search for similar historical trade or tariff threats that later became TACO or HOLD.
+
+Now convert the current input into a retrieval query.
