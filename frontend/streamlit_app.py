@@ -6,6 +6,7 @@ streamlit run frontend/streamlit_app.py
 """
 
 import os
+import re
 
 import matplotlib.pyplot as plt
 import requests
@@ -41,11 +42,80 @@ def probability_label(prob) -> str:
 
 
 def normalize_direction(direction) -> str:
-    """把市场方向限制为 up / down / sideways。"""
+    """把市场方向限制为 up / down / neutral。"""
     value = str(direction).lower().strip()
-    if value in {"up", "down", "sideways"}:
+
+    if value in {"up", "down", "neutral"}:
         return value
-    return "sideways"
+
+    if value in {"sideways", "flat", "mixed"}:
+        return "neutral"
+
+    return "neutral"
+
+
+def parse_market_summary(market_prediction: dict) -> dict:
+    """
+    兼容第8课 Workflow 3 只返回 summary 的情况。
+
+    例如 summary:
+    Market Impact Prediction
+
+    USO: neutral
+    GLD: up
+    SPY: down
+
+    Key assets: SPY, GLD
+    Magnitude: low
+
+    Reasoning:
+    ...
+    """
+
+    parsed = dict(market_prediction)
+
+    summary = str(market_prediction.get("summary", ""))
+
+    # 如果后端已经有结构化字段，就优先保留
+    if "direction_uso" not in parsed:
+        match = re.search(r"USO:\s*(up|down|neutral|sideways)", summary, re.IGNORECASE)
+        if match:
+            parsed["direction_uso"] = normalize_direction(match.group(1))
+        else:
+            parsed["direction_uso"] = "neutral"
+
+    if "direction_gld" not in parsed:
+        match = re.search(r"GLD:\s*(up|down|neutral|sideways)", summary, re.IGNORECASE)
+        if match:
+            parsed["direction_gld"] = normalize_direction(match.group(1))
+        else:
+            parsed["direction_gld"] = "neutral"
+
+    if "direction_spy" not in parsed:
+        match = re.search(r"SPY:\s*(up|down|neutral|sideways)", summary, re.IGNORECASE)
+        if match:
+            parsed["direction_spy"] = normalize_direction(match.group(1))
+        else:
+            parsed["direction_spy"] = "neutral"
+
+    if "magnitude" not in parsed:
+        match = re.search(r"Magnitude:\s*(low|med|medium|high)", summary, re.IGNORECASE)
+        if match:
+            magnitude = match.group(1).lower()
+            if magnitude == "medium":
+                magnitude = "med"
+            parsed["magnitude"] = magnitude
+        else:
+            parsed["magnitude"] = "N/A"
+
+    if "reasoning" not in parsed:
+        match = re.search(r"Reasoning:\s*([\s\S]*)", summary, re.IGNORECASE)
+        if match:
+            parsed["reasoning"] = match.group(1).strip()
+        else:
+            parsed["reasoning"] = "无"
+
+    return parsed
 
 
 def call_backend(statement: str) -> dict:
@@ -60,38 +130,61 @@ def call_backend(statement: str) -> dict:
 
 
 def plot_market_prediction(market_prediction: dict) -> None:
-    """把 USO / GLD / SPY 的方向转换成柱状图。"""
-    assets = ["USO 石油", "GLD 黄金", "SPY 标普"]
+    """把 USO / GLD / SPY 的方向转换成英文柱状图。"""
+
+    # 图表中全部使用英文，避免 matplotlib 中文乱码
+    assets = ["USO", "GLD", "SPY"]
+
     fields = ["direction_uso", "direction_gld", "direction_spy"]
+
     direction_map = {
         "up": 1,
-        "sideways": 0,
+        "neutral": 0,
         "down": -1,
     }
+
     color_map = {
         "up": "green",
-        "sideways": "gray",
+        "neutral": "gray",
         "down": "red",
     }
 
     directions = [
-        normalize_direction(market_prediction.get(field, "sideways"))
+        normalize_direction(market_prediction.get(field, "neutral"))
         for field in fields
     ]
+
     values = [direction_map[direction] for direction in directions]
     colors = [color_map[direction] for direction in directions]
 
     fig, ax = plt.subplots(figsize=(7, 4))
-    bars = ax.bar(assets, values, color=colors)
+
+    bars = ax.bar(
+        assets,
+        values,
+        color=colors,
+    )
+
     ax.set_title("Market Impact Prediction")
+    ax.set_xlabel("Asset")
+    ax.set_ylabel("Direction Score")
+
     ax.set_ylim(-1.5, 1.5)
     ax.set_yticks([-1, 0, 1])
-    ax.set_yticklabels(["down", "sideways", "up"])
+    ax.set_yticklabels(["down", "neutral", "up"])
+
     ax.axhline(0, color="black", linewidth=0.8)
 
     for bar, direction in zip(bars, directions):
         y = bar.get_height()
-        text_y = y + 0.12 if y >= 0 else y - 0.18
+
+        if y > 0:
+            text_y = y + 0.12
+        elif y < 0:
+            text_y = y - 0.18
+        else:
+            text_y = y + 0.12
+
         ax.text(
             bar.get_x() + bar.get_width() / 2,
             text_y,
@@ -100,6 +193,7 @@ def plot_market_prediction(market_prediction: dict) -> None:
             va="center",
         )
 
+    plt.tight_layout()
     st.pyplot(fig)
     plt.close(fig)
 
@@ -120,6 +214,7 @@ if "history" not in st.session_state:
 
 # 页面标题区
 st.set_page_config(page_title="TACO雷达", layout="wide")
+
 st.title("TACO雷达")
 st.caption("AI追踪特朗普言论，分析 TACO 概率与市场影响")
 
@@ -157,17 +252,23 @@ if analyze_clicked:
                 result = call_backend(clean_statement)
                 st.session_state["result"] = result
                 add_to_history(result)
+
             except requests.exceptions.ConnectionError:
                 st.error("无法连接后端。请先启动 FastAPI：python -m uvicorn app.main:app --reload")
+
             except requests.exceptions.Timeout:
                 st.error("请求超时。Dify 工作流可能响应较慢，请稍后重试。")
+
             except requests.exceptions.HTTPError as error:
                 detail = None
+
                 try:
                     detail = error.response.json().get("detail")
                 except Exception:
                     detail = str(error)
+
                 st.error(f"后端返回错误：{error.response.status_code}｜{detail}")
+
             except Exception as error:
                 st.error(f"分析失败：{error}")
 
@@ -180,7 +281,10 @@ if result:
 
     classification = result.get("classification", {})
     probability_info = result.get("taco_probability", {})
-    market_prediction = result.get("market_prediction", {})
+    market_prediction_raw = result.get("market_prediction", {})
+
+    # 兼容只有 summary 的市场预测结果
+    market_prediction = parse_market_summary(market_prediction_raw)
 
     hardness = classification.get("hardness", "N/A")
     domain = classification.get("domain", "N/A")
@@ -206,35 +310,43 @@ if result:
         st.caption(f"影响强度 Magnitude：{magnitude}")
 
     st.subheader("市场影响预测")
+
     market_col1, market_col2, market_col3 = st.columns(3)
 
-    direction_uso = normalize_direction(market_prediction.get("direction_uso", "sideways"))
-    direction_gld = normalize_direction(market_prediction.get("direction_gld", "sideways"))
-    direction_spy = normalize_direction(market_prediction.get("direction_spy", "sideways"))
+    direction_uso = normalize_direction(market_prediction.get("direction_uso", "neutral"))
+    direction_gld = normalize_direction(market_prediction.get("direction_gld", "neutral"))
+    direction_spy = normalize_direction(market_prediction.get("direction_spy", "neutral"))
 
     with market_col1:
-        st.metric("USO 石油", direction_uso)
+        st.metric("USO Oil", direction_uso)
+
     with market_col2:
-        st.metric("GLD 黄金", direction_gld)
+        st.metric("GLD Gold", direction_gld)
+
     with market_col3:
-        st.metric("SPY 标普", direction_spy)
+        st.metric("SPY S&P 500", direction_spy)
 
     plot_market_prediction(market_prediction)
 
     st.subheader("分析理由")
+
     st.markdown("**言论分类理由**")
     st.write(classification.get("reasoning", "无"))
+
     st.markdown("**TACO 概率理由**")
     st.write(probability_info.get("reasoning", "无"))
+
     st.markdown("**市场方向理由**")
     st.write(market_prediction.get("reasoning", "无"))
 
     key_cases = probability_info.get("key_cases", [])
+
     if isinstance(key_cases, str):
         key_cases = [key_cases]
 
     if isinstance(key_cases, list) and key_cases:
         st.subheader("关键历史案例")
+
         for index, case in enumerate(key_cases, start=1):
             st.write(f"{index}. {case}")
 
@@ -249,13 +361,16 @@ if st.session_state["history"]:
     for index, item in enumerate(st.session_state["history"], start=1):
         classification = item.get("classification", {})
         probability_info = item.get("taco_probability", {})
+
         statement_text = str(item.get("statement", ""))
         short_statement = statement_text[:80]
+
         if len(statement_text) > 80:
             short_statement += "..."
 
         domain = classification.get("domain", "N/A")
         prob = probability_info.get("taco_probability", "N/A")
+
         st.write(f"{index}. [{domain}] TACO概率：{prob}%｜{short_statement}")
 
 
