@@ -97,6 +97,156 @@ TACO_Project
 | Lesson 12 | Demo Day and Portfolio | Demo 视频、项目总结、申请材料 |
 
 ---
+# Lesson 1 - Project Introduction and AI Event Analysis
+
+本课目标：
+
+- 理解 TACO Project 的项目背景和研究问题
+- 了解什么是 TACO 现象
+- 理解“政治言论 → 历史案例 → 市场反应 → AI 分析”的完整项目逻辑
+- 搭建项目基本文件夹结构
+- 熟悉 GitHub、VS Code、Python 环境和课程项目流程
+
+核心概念：
+
+```text
+TACO = Trump Always Chickens Out
+
+在本项目中，TACO 指的是：
+特朗普先释放强硬政策信号，
+例如提高关税、威胁制裁、攻击美联储或释放强硬言论，
+但后续又出现软化、推迟、豁免、谈判或部分让步。
+```
+
+项目分析链路：
+
+```text
+Trump Statement
+↓
+Statement Classification
+↓
+Historical Case Retrieval
+↓
+TACO Probability
+↓
+Market Impact Prediction
+↓
+Web App Display
+```
+
+项目结构准备：
+
+```text
+TACO_Project
+│
+├── app
+├── data
+├── docs
+├── frontend
+├── src
+│   └── lesson1
+├── README.md
+├── requirements.txt
+└── .gitignore
+```
+
+本课主要输出：
+
+```text
+README.md
+requirements.txt
+.gitignore
+src/lesson1
+docs/project_intro.md
+```
+
+课堂重点：
+
+本课不是直接预测股票价格，而是让学生理解如何把现实世界中的新闻事件转化为可以被 AI 和数据分析系统处理的结构化问题。
+
+---
+
+# Lesson 2 - News Collection and Data Cleaning
+
+本课目标：
+
+- 学习使用 RSS 抓取财经新闻
+- 理解 URL 编码和关键词搜索
+- 使用 `feedparser` 获取新闻标题、时间、摘要和链接
+- 使用 `pandas` 清洗新闻数据
+- 保存结构化 CSV 文件
+- 理解新闻数据和市场数据为什么需要按日期对齐
+
+核心文件：
+
+```text
+src/lesson2/fetch_news.py
+src/lesson2/clean_news.py
+src/lesson2/merge_news_market.py
+data/clean_news.csv
+data/merged_news_market.csv
+```
+
+安装依赖：
+
+```powershell
+pip install feedparser pandas
+```
+
+新闻抓取示例：
+
+```powershell
+python src\lesson2\fetch_news.py
+```
+
+新闻清洗示例：
+
+```powershell
+python src\lesson2\clean_news.py
+```
+
+新闻和市场数据合并示例：
+
+```powershell
+python src\lesson2\merge_news_market.py
+```
+
+主要输出：
+
+```text
+data/clean_news.csv
+data/merged_news_market.csv
+```
+
+重要说明：
+
+新闻数据和市场数据合并时，日期必须能够对应。  
+如果新闻是 2026 年的数据，而市场数据只覆盖到 2025 年，那么使用 `inner merge` 时结果可能为空。
+
+课堂解释：
+
+```text
+新闻日期 = 事件发生时间
+市场数据日期 = 资产价格变化时间
+
+只有把两者按日期对齐，才能分析：
+某个新闻事件发生后，USO、GLD、SPY 等资产在后续几天如何变化。
+```
+
+注意事项：
+
+```text
+1. URL 中不能直接出现空格，需要进行 URL 编码。
+2. RSS 页面结构可能变化，新闻抓取结果可能受网络环境影响。
+3. 真实新闻数据不一定能和旧市场数据直接匹配。
+4. 如果合并结果为空，优先检查日期范围是否重合。
+```
+
+课堂成果：
+
+本课完成后，学生可以获得一份结构化新闻数据文件，为后续市场数据可视化和历史案例分析做准备。
+
+---
 
 # Lesson 3 - Financial Data Visualization
 
