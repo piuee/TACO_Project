@@ -85,6 +85,8 @@ TACO_Project
 
 | Lesson | Topic | Main Output |
 |---|---|---|
+| Lesson 1 | Project Introduction and AI Event Analysis | 项目背景、TACO 概念、环境准备、项目结构 |
+| Lesson 2 | News Collection and Data Cleaning | 新闻抓取、RSS 解析、CSV 清洗、新闻数据文件 |
 | Lesson 3 | Financial Data Visualization | 市场走势图、事件标注图、相关性热力图 |
 | Lesson 4 | TACO Historical Case Analysis | 历史案例分析图表、RAG 案例 CSV |
 | Lesson 5 | Dify + RAG Knowledge Base | taco_kb.txt 知识库文件 |
