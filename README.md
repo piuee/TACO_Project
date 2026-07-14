@@ -45,6 +45,8 @@ TACO_Project
 │   └── streamlit_cloud_app.py
 │
 ├── src
+│   ├── lesson1
+│   ├── lesson2
 │   ├── lesson3
 │   ├── lesson4
 │   ├── lesson5
